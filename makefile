@@ -1,5 +1,13 @@
+#
+#	Student name: Steven Balagtas
+#	Student number: n9998250
+#	Unit: CAB202 Semester 1, 2019
+#
+#	Makefile for the Robot Vacuum Cleaner simulator.
+#
+
 # Fix the required object files and target name to match requirements.
-OBJ=
+OBJ=main.o terminal.o helpers.o 
 TARGET=a1_n9998250
 
 # Fix the directories to match your file organisation.
