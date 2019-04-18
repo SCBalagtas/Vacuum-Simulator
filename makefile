@@ -1,10 +1,10 @@
 # Fix the required object files and target name to match requirements.
-OBJ=main.o helpers.o hero.o zombie.o collision.o
-TARGET=zdj2
+OBJ=
+TARGET=a1_n9998250
 
 # Fix the directories to match your file organisation.
-CC_FLAGS=-std=gnu99 -I../../../CAB202/ZDK -Wall -Werror -g
-LD_FLAGS=-L../../../CAB202/ZDK -lzdk -lncurses -lm
+CC_FLAGS=-std=gnu99 -I../../CAB202/ZDK -Wall -Werror -g
+LD_FLAGS=-L../../CAB202/ZDK -lzdk -lncurses -lm
 
 all: $(TARGET)
 
