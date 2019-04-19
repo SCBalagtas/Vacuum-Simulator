@@ -4,7 +4,7 @@ Student name: Steven Balagtas
 Student number: n9998250
 Unit: CAB202 Semester 1, 2019
 
-This is the main file for the Robot Vacuum Cleaner simulator.
+This file contains the main function for the Robot Vacuum simulator.
 
 */
 
@@ -12,23 +12,25 @@ This is the main file for the Robot Vacuum Cleaner simulator.
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
 #include <cab202_graphics.h>
 #include <cab202_timers.h>
-#include "terminal.h"
+#include "draw.h"
 
 // Global variables
-
-// Draw all objects in the simulation.
-void draw_all() {
-    clear_screen();
-    draw_terminal();
-    show_screen();
-}
 
 // Setup all objects in the simulation.
 void setup( void ) {
     draw_all();
+}
+
+// A reset function to reset the simulation.
+void reset() {
+    setup();
+}
+
+// The main loop function, runs the simulation.
+void loop() {
+    // Implement loop here...
 }
 
 // Run the program.
@@ -37,7 +39,7 @@ int main( void ) {
     setup();
 
     while (1) {
-
+        loop();
     }
 
     return 0;

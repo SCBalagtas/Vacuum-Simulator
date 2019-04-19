@@ -7,7 +7,7 @@
 #
 
 # Fix the required object files and target name to match requirements.
-OBJ=main.o terminal.o helpers.o 
+OBJ=main.o draw.o helpers.o 
 TARGET=a1_n9998250
 
 # Fix the directories to match your file organisation.

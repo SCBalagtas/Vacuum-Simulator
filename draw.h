@@ -4,7 +4,7 @@ Student name: Steven Balagtas
 Student number: n9998250
 Unit: CAB202 Semester 1, 2019
 
-This file contains the function declaration for drawing the terminal.
+This file contains the function declarations for drawing all objects in the simulation.
 
 */
 
@@ -15,4 +15,4 @@ This file contains the function declaration for drawing the terminal.
 #include <cab202_graphics.h>
 #include "helpers.h"
 
-void draw_terminal();
+void draw_all();
