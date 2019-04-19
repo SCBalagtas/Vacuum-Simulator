@@ -14,6 +14,7 @@ This file contains the function definitions for drawing all objects in the simul
 #include <string.h>
 #include <cab202_graphics.h>
 #include "helpers.h"
+#include "vacuum.h"
 
 // Global variables
 static int width, height;
@@ -74,5 +75,6 @@ void draw_all() {
     clear_screen();
     draw_room();
     draw_status_display();
+    draw_vacuum();
     show_screen();
 }

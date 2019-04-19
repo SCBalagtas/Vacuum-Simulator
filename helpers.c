@@ -49,7 +49,7 @@ void draw_rect( int left, int top, int right, int bottom, int ch ) {
     draw_line( left, bottom, right, bottom, ch );
     draw_line( left, top, left, bottom, ch );
     draw_line( right, top, right, bottom, ch );
-}
+} // End draw_rect
 
 void draw_assignment_rect( int left, int top, int right, int bottom, int vert, int hori, int corner) {
     draw_line( left, top, right, top, hori );
@@ -66,7 +66,7 @@ void draw_assignment_rect( int left, int top, int right, int bottom, int vert, i
     draw_char(right, top, corner);
     // Bottom right
     draw_char(right, bottom, corner);
-}
+} // End draw_assignment_rect
 
 /**
  *  Draws formatted text, starting at the specified location, and spreading
@@ -220,4 +220,37 @@ int get_int( char * prompt ) {
     } // End while
 
     return z;
-} // End get_int	
+} // End get_int
+
+// Add an implementation of the week 3 AMS exercise draw_pixels()
+/*
+*   Parameters:
+*       left – an integer which specifies the horizontal offset of the top-left corner of the image, if it were to be rendered.
+*       top – an integer which specifies the vertical offset of the top-left corner of the image, if it were to be rendered.
+*       width – an integer which specifies the width of the image that would be rendered.
+*       height – an integer which specifies the height of the image that would be rendered.
+*       bitmap – a char array which contains the pixel data of the bitmap. This array is guaranteed to have at least width×height elements.
+*       space_is_transparent – a boolean value which determines if we can see through spaces. If this is true, then we should skip any pixels 
+*                              occupied by a space (' ') in the bitmap. This is also called “transparent spaces” mode. Otherwise, spaces should be opaque.
+*/
+void draw_pixels(int left, int top, int width, int height, char * bitmap, bool space_is_transparent) {
+    // Go through the rows of bitmap
+    for(int h = 0; h < height; h++) {
+        // Go through each character of that row of bitmap 
+        for(int w = 0; w < width; w++) {
+            // Draw space characters
+            if (!space_is_transparent) {
+                draw_char(left + w, top + h, bitmap[w + h * width]);
+            }
+            // Don't draw space characters
+            else {
+                if (bitmap[w + h * width] == ' ') {
+                    continue;
+                }
+                else{
+                    draw_char(left + w, top + h, bitmap[w + h * width]);
+                }   
+            }   
+        }
+    }
+} // End of draw_pixel

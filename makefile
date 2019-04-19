@@ -7,7 +7,7 @@
 #
 
 # Fix the required object files and target name to match requirements.
-OBJ=main.o draw.o helpers.o 
+OBJ=main.o helpers.o draw.o vacuum.o
 TARGET=a1_n9998250
 
 # Fix the directories to match your file organisation.
@@ -23,6 +23,6 @@ $(TARGET): $(OBJ)
 	gcc -c $< $(CC_FLAGS)
 
 clean:
-	rm -f *.exe $(OBJ) $(TARGET)
+	rm -f *.exe *.o
 
 rebuild: clean all
