@@ -8,7 +8,7 @@ This file contains the main function for the Robot Vacuum simulator.
 
 */
 
-// Import .h files
+// Import .h files.
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,14 +16,16 @@ This file contains the main function for the Robot Vacuum simulator.
 #include <cab202_timers.h>
 #include "draw.h"
 #include "vacuum.h"
+#include "timer.h"
 
-// Global variables
+// Global variables.
 bool simulation_over = false;
 bool paused = true;
-const int DELAY = 10; // in milliseconds
+const int DELAY = 500; // in milliseconds
 
 // Setup all objects in the simulation.
 void setup( void ) {
+    start_timer();
     setup_vacuum();
     draw_all();
 }
@@ -41,6 +43,11 @@ void loop() {
         simulation_over = true;
         return;
     }
+
+    if (ch == 'r') {
+        reset();
+    }
+
     if (!paused) {
         // Update vacuum here...
     }

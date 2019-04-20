@@ -7,7 +7,7 @@
 #
 
 # Fix the required object files and target name to match requirements.
-OBJ=main.o helpers.o draw.o vacuum.o
+OBJ=main.o helpers.o timer.o draw.o vacuum.o
 TARGET=a1_n9998250
 
 # Fix the directories to match your file organisation.

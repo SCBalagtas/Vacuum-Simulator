@@ -8,11 +8,13 @@ This file contains the function declarations for drawing all objects in the simu
 
 */
 
-// Import .h files
+// Import .h files.
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
 #include <cab202_graphics.h>
 #include "helpers.h"
+#include "vacuum.h"
+#include "timer.h"
 
 void draw_all();

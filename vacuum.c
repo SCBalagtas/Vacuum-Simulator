@@ -8,14 +8,14 @@ This file contains the function definitions for everything related to the Robot 
 
 */
 
-// Import .h files
+// Import .h files.
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
 #include <cab202_graphics.h>
 #include "helpers.h"
 
-// Global variables
+// Global variables.
 // Vacuum state
 #define VACUUM_WIDTH 9
 #define VACUUM_HEIGHT 9

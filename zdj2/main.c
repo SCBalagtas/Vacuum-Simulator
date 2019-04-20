@@ -9,7 +9,7 @@
 #include "zombie.h"
 #include "collision.h"
 
-// Global variables
+// Global variables.
 bool game_over = false;
 int delay = 10;
 int timeout = INT_MAX;

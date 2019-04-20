@@ -8,7 +8,7 @@ This file contains the function declarations for everything related to the Robot
 
 */
 
-// Import .h files
+// Import .h files.
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>

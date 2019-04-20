@@ -8,15 +8,16 @@ This file contains the function definitions for drawing all objects in the simul
 
 */
 
-// Import .h files
+// Import .h files.
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
 #include <cab202_graphics.h>
 #include "helpers.h"
 #include "vacuum.h"
+#include "timer.h"
 
-// Global variables
+// Global variables.
 static int width, height;
 static int vertical = '|';
 static int horizontal = '-';
@@ -51,7 +52,7 @@ void draw_status_information() {
     // Draw device battery percentage in the top right cell.
     draw_string((((width - 1)/ 6) * 5) - (strlen(STUD_NUM)/ 2), 1, STUD_NUM); // REPLACE STUD_NUM WITH DEVICE BATTERY %
     // Draw elapsed time in the bottom left cell.
-    draw_string(((width - 1)/ 6) - (strlen(STUD_NUM)/ 2), 3, STUD_NUM); // REPLACE STUD_NUM WITH ELAPSED TIME
+    draw_string(((width - 1)/ 6) - (strlen(get_elapsed_time())/ 2), 3, get_elapsed_time()); // REPLACE STUD_NUM WITH ELAPSED TIME
     // Draw current load of device (in g) in the bottom middle cell.
     draw_string(((width - 1)/ 2) - (strlen(STUD_NUM)/ 2), 3, STUD_NUM); // REPLACE STUD_NUM WITH CURRENT LOAD
     // Draw rubbish available in the bottom right cell.
