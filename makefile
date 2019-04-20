@@ -23,6 +23,6 @@ $(TARGET): $(OBJ)
 	gcc -c $< $(CC_FLAGS)
 
 clean:
-	rm -f *.exe *.o
+	rm -f *.exe *.o *.stackdump
 
 rebuild: clean all
