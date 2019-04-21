@@ -21,7 +21,7 @@ This file contains the main function for the Robot Vacuum simulator.
 // Global variables.
 bool simulation_over = false;
 bool paused = true;
-const int DELAY = 500; // in milliseconds
+const int DELAY = 10; // in milliseconds
 
 // Setup all objects in the simulation.
 void setup( void ) {
@@ -35,6 +35,23 @@ void reset() {
     setup();
 }
 
+/**
+ *  Jump table which chooses the action (if any) which corresponds to a
+ *  supplied command character.
+ *
+ *  Parameters:
+ *      ch: a command character. Currently recognised comands are listed in
+ *          the do_help function.
+ */
+void do_operation( int ch ) {
+    if ( ch == 'r' ) {
+        reset();
+    }
+    else if ( is_vacuum_ctrl( ch ) ) {
+        manual_update_vacuum( ch );
+    }
+}
+
 // The main loop function, runs the simulation.
 void loop() {
     // Implement loop here...
@@ -44,8 +61,8 @@ void loop() {
         return;
     }
 
-    if (ch == 'r') {
-        reset();
+    if ( ch >= ' ' ) {
+        do_operation( ch );
     }
 
     if (!paused) {
