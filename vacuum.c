@@ -19,7 +19,7 @@ This file contains the function definitions for everything related to the Robot 
 // Vacuum state
 #define VACUUM_WIDTH 9
 #define VACUUM_HEIGHT 9
-#define VACCUM_SPEED 0.2
+#define VACUUM_SPEED 0.2
 
 static double vac_x, vac_y, vac_dx, vac_dy, angle;
 
@@ -53,7 +53,7 @@ void setup_vacuum() {
     // Initialise vacuum direction 90 degrees (pi/ 2), vacuum heads straight down.
     // Speed is initialised to 0.2 as per specification.
     angle = M_PI/ 2;
-    double vac_speed = VACCUM_SPEED;
+    double vac_speed = VACUUM_SPEED;
     vac_dx = vac_speed * cos(angle);
     vac_dy = vac_speed * sin(angle);
 }
@@ -94,6 +94,24 @@ void manual_update_vacuum( int ch ) {
 
 // Update the vacuum position automatically if !paused.
 void update_vacuum() {
-    round(vac_x += vac_dx);
-    round(vac_y += vac_dy);
+    // Predict the new x and y coordinates of the vacuum and check if it will overlap any obstacles.
+    int new_x = round(vac_x + vac_dx);
+    int new_y = round(vac_y + vac_dy);
+
+    bool bounced = false;
+
+    // Check if vacuum overlaps vertical walls.
+    if (new_x - VACUUM_WIDTH/ 2 < 1 || new_x + VACUUM_WIDTH/ 2 > screen_width() - 2) {
+        // Insert change direction function here...
+        bounced = true;
+    }
+    // Check if vacuum overplaps horizontal walls.
+    if (new_y - VACUUM_HEIGHT/ 2 < 5 || new_y + VACUUM_HEIGHT/ 2 > screen_height() - 4) {
+        // Insert change direction function here...
+        bounced = true;
+    } 
+    if (!bounced) {
+        round(vac_x += vac_dx);
+        round(vac_y += vac_dy);
+    }
 }
