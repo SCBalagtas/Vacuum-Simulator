@@ -25,6 +25,7 @@ const int DELAY = 10; // in milliseconds
 
 // Setup all objects in the simulation.
 void setup( void ) {
+    paused = true;
     start_timer();
     setup_vacuum();
     draw_all();
@@ -33,6 +34,11 @@ void setup( void ) {
 // A reset function to reset the simulation.
 void reset() {
     setup();
+}
+
+// A pause function which flips the paused variable.
+void pause () {
+    paused = !paused;
 }
 
 /**
@@ -50,6 +56,9 @@ void do_operation( int ch ) {
     else if ( is_vacuum_ctrl( ch ) ) {
         manual_update_vacuum( ch );
     }
+    else if ( ch == 'p' ) {
+        pause();
+    }
 }
 
 // The main loop function, runs the simulation.
@@ -66,7 +75,7 @@ void loop() {
     }
 
     if (!paused) {
-        // Update vacuum here...
+        update_vacuum();
     }
 
     draw_all();

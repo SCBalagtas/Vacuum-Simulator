@@ -19,3 +19,4 @@ void draw_vacuum();
 void setup_vacuum();
 bool is_vacuum_ctrl( int ch );
 void manual_update_vacuum( int ch );
+void update_vacuum();
