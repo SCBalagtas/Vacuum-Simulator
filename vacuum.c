@@ -109,7 +109,11 @@ void update_vacuum() {
     if (new_y - VACUUM_HEIGHT/ 2 < 5 || new_y + VACUUM_HEIGHT/ 2 > screen_height() - 4) {
         // Insert change direction function here...
         bounced = true;
-    } 
+    }
+    // Check if vacuum overlaps the charging station...
+    // Implement here...
+
+    // If not overlapping anything just keep moving in the same direction.
     if (!bounced) {
         round(vac_x += vac_dx);
         round(vac_y += vac_dy);
