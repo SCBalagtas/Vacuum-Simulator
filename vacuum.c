@@ -35,6 +35,8 @@ static char * vacuum =
 "  @@@@@  "
 ;
 
+static char heading[20];
+
 // Draw the vacuum at the center of (vac_x, vac_y).
 void draw_vacuum() {
     int left = round(vac_x) - VACUUM_WIDTH/ 2;
@@ -52,7 +54,7 @@ void setup_vacuum() {
 
     // Initialise vacuum direction 90 degrees (pi/ 2), vacuum heads straight down.
     // Speed is initialised to 0.2 as per specification.
-    angle = M_PI/ 2;
+    angle = deg_to_rad(450);
     double vac_speed = VACUUM_SPEED;
     vac_dx = vac_speed * cos(angle);
     vac_dy = vac_speed * sin(angle);
@@ -92,6 +94,34 @@ void manual_update_vacuum( int ch ) {
     }
 }
 
+// Change the vacuum's heading direction after hitting an obstacle as required per the specification.
+void change_direction() {
+    // Convert the current angle into degrees.
+    int curr_angle = rad_to_deg(angle);
+    
+    bool direction; // True = Right, False = Left.
+
+    // Flip a coin, left or right.
+    direction = rand() % 2;
+
+    // Check if left or right and adjust angle as necessary.
+    // If right add to the angle, if left subrtact from the angle.
+    if (direction) {
+        curr_angle += (30 + (rand() % 30 + 1)); // Random angle between 30 - 60.
+    }
+    else {
+        curr_angle -= (30 + (rand() % 30 + 1)); // Random angle between 30 - 60.
+    }
+
+    // Assign the new angle to the global variable 'angle'.
+    angle = deg_to_rad(curr_angle);
+
+    // Assign the new vac_dx and vac_dy values.
+    double vac_speed = VACUUM_SPEED;
+    vac_dx = vac_speed * cos(angle);
+    vac_dy = vac_speed * sin(angle);
+}
+
 // Update the vacuum position automatically if !paused.
 void update_vacuum() {
     // Predict the new x and y coordinates of the vacuum and check if it will overlap any obstacles.
@@ -103,11 +133,13 @@ void update_vacuum() {
     // Check if vacuum overlaps vertical walls.
     if (new_x - VACUUM_WIDTH/ 2 < 1 || new_x + VACUUM_WIDTH/ 2 > screen_width() - 2) {
         // Insert change direction function here...
+        change_direction();
         bounced = true;
     }
     // Check if vacuum overplaps horizontal walls.
     if (new_y - VACUUM_HEIGHT/ 2 < 5 || new_y + VACUUM_HEIGHT/ 2 > screen_height() - 4) {
         // Insert change direction function here...
+        change_direction();
         bounced = true;
     }
     // Check if vacuum overlaps the charging station...
@@ -118,4 +150,10 @@ void update_vacuum() {
         round(vac_x += vac_dx);
         round(vac_y += vac_dy);
     }
+}
+
+// Return the the vacuums heading direction in a format suitable for the display status.
+char * get_heading() {
+    sprintf(heading, "Heading: %3d", rad_to_deg(angle));
+    return heading;
 }

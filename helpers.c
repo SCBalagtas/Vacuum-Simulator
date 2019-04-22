@@ -254,3 +254,23 @@ void draw_pixels(int left, int top, int width, int height, char * bitmap, bool s
         }
     }
 } // End of draw_pixel
+
+// A simple function to convert degrees to radians.
+double deg_to_rad(int degrees) {
+    // Calculate the provided angle into radians.
+    double result = (degrees % 360) * (M_PI/ 180);
+    return result;
+}
+
+// A simple function to convert radians into degrees. This will be used to display the vacuums direction in the status display.
+int rad_to_deg(double radians) {
+    // Calculate the provided angle into degrees.
+    int result = round(radians * (180/ M_PI));
+
+    // While angle is negative add 360, this converts the angle to a positive value.
+    while (result < 0) {
+        result += 360;
+    }
+    
+    return result % 360;
+}

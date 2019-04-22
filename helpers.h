@@ -28,3 +28,5 @@ void erase_row( int y );
 int get_chars( char * prompt, char * buffer, const int max_len );
 int get_int( char * prompt );
 void draw_pixels(int left, int top, int width, int height, char * bitmap, bool space_is_transparent);
+double deg_to_rad(int degrees);
+int rad_to_deg(double radians);
