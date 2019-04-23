@@ -39,6 +39,7 @@ void reset() {
 // A pause function which flips the paused variable.
 void pause () {
     paused = !paused;
+    start_battery_timer();
 }
 
 /**

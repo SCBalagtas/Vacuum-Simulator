@@ -21,3 +21,5 @@ bool is_vacuum_ctrl( int ch );
 void manual_update_vacuum( int ch );
 void update_vacuum();
 char * get_heading();
+void start_battery_timer();
+char * get_battery_status();

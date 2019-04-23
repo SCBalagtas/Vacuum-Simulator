@@ -38,6 +38,13 @@ static char * vacuum =
 
 static char heading[20];
 
+// Battery state
+static int battery;
+static int battery_timer;
+static int battery_use;
+static int battery_temp_time;
+static char battery_status[15];
+
 // Draw the vacuum at the center of (vac_x, vac_y).
 void draw_vacuum() {
     int left = round(vac_x) - VACUUM_WIDTH/ 2;
@@ -55,10 +62,25 @@ void setup_vacuum() {
 
     // Initialise vacuum direction 90 degrees (pi/ 2), vacuum heads straight down.
     // Speed is initialised to 0.2 as per specification.
-    angle = deg_to_rad(450);
+    angle = deg_to_rad(90);
     double vac_speed = VACUUM_SPEED;
     vac_dx = vac_speed * cos(angle);
     vac_dy = vac_speed * sin(angle);
+
+    // Initialise vacuum battery as 100%.
+    battery = 100;
+}
+
+// Start battery timer function that initiates battery_timer with get_current_time().
+void start_battery_timer() {
+    battery_timer = round(get_current_time());
+    battery_temp_time = 0;
+}
+
+// Calculate the battery used since last unpause.
+int calc_battery_use() {
+    battery_use = round(get_current_time()) - battery_timer;
+    return battery_use;
 }
 
 // Returns true iff the supplied argument is a vacuum navigation control.
@@ -126,7 +148,7 @@ void change_direction() {
     vac_dy = vac_speed * sin(angle);
 }
 
-// Update the vacuum position automatically if !paused.
+// Update the vacuum position and battery automatically if !paused.
 void update_vacuum() {
     // Predict the new x and y coordinates of the vacuum and check if it will overlap any obstacles.
     int new_x = round(vac_x + vac_dx);
@@ -154,10 +176,22 @@ void update_vacuum() {
         round(vac_x += vac_dx);
         round(vac_y += vac_dy);
     }
+
+    // Update the battery %.
+    if (calc_battery_use() - battery_temp_time == 1) {
+        battery -= 1;
+        battery_temp_time = calc_battery_use();
+    }
 }
 
-// Return the the vacuums heading direction in a format suitable for the display status.
+// Return the vacuums heading direction in a format suitable for the display status.
 char * get_heading() {
     sprintf(heading, "Heading: %3d", rad_to_deg(angle));
     return heading;
+}
+
+// Return the vacuums current battery % in a format suitable for the display status.
+char * get_battery_status() {
+    sprintf(battery_status, "Battery: %3d%%", battery);
+    return battery_status;
 }
