@@ -50,7 +50,7 @@ void draw_status_information() {
     // Draw device direction in the top middle cell.
     draw_string(((width - 1)/ 2) - (strlen(get_heading())/ 2), 1, get_heading());
     // Draw device battery percentage in the top right cell.
-    draw_string((((width - 1)/ 6) * 5) - (strlen(get_battery_status())/ 2), 1, get_battery_status()); // REPLACE STUD_NUM WITH DEVICE BATTERY %
+    draw_string((((width - 1)/ 6) * 5) - (strlen(get_battery_status())/ 2), 1, get_battery_status());
     // Draw elapsed time in the bottom left cell.
     draw_string(((width - 1)/ 6) - (strlen(get_elapsed_time())/ 2), 3, get_elapsed_time()); 
     // Draw current load of device (in g) in the bottom middle cell.

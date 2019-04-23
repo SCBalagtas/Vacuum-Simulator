@@ -22,4 +22,6 @@ void manual_update_vacuum( int ch );
 void update_vacuum();
 char * get_heading();
 void start_battery_timer();
+bool is_battery();
+void battery_hack(int new_battery);
 char * get_battery_status();

@@ -83,6 +83,31 @@ int calc_battery_use() {
     return battery_use;
 }
 
+// Boolean to check if there is still battery.
+bool is_battery() {
+    if (battery > 0) {
+        return true;
+    }
+    return false;
+}
+
+// Battery hack function. Sets the battery level to whatever the input value is.
+// If input is not an int, ignore the update.
+void battery_hack(int new_battery) {
+    if (new_battery <= 100 && new_battery > 0) {
+        battery = new_battery;
+    }
+    else if (new_battery <= 0) {
+        battery = 25;
+    }
+    else if (new_battery > 100) {
+        battery = 100;
+    }
+
+    // Reset battery timer.
+    start_battery_timer();
+}
+
 // Returns true iff the supplied argument is a vacuum navigation control.
 bool is_vacuum_ctrl( int ch ) {
     return ( ch == 'j' || ch == 'k' || ch == 'l' || ch == 'i' );

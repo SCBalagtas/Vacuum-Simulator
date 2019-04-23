@@ -60,6 +60,9 @@ void do_operation( int ch ) {
     else if ( ch == 'p' ) {
         pause();
     }
+    else if ( ch == 'y' ) {
+        battery_hack(get_int( "New battery level (0 - 100)?" ));
+    }
 }
 
 // The main loop function, runs the simulation.
@@ -76,7 +79,9 @@ void loop() {
     }
 
     if (!paused) {
-        update_vacuum();
+        if (is_battery()) {
+            update_vacuum();
+        }
     }
 
     draw_all();
