@@ -13,6 +13,7 @@ This file contains the function definitions for everything related to the Robot 
 #include <stdlib.h>
 #include <string.h>
 #include <cab202_graphics.h>
+#include <cab202_timers.h>
 #include "helpers.h"
 
 // Global variables.
@@ -96,6 +97,9 @@ void manual_update_vacuum( int ch ) {
 
 // Change the vacuum's heading direction after hitting an obstacle as required per the specification.
 void change_direction() {
+    // Set a new seed for rand()
+    srand(get_current_time());
+
     // Convert the current angle into degrees.
     int curr_angle = rad_to_deg(angle);
     
