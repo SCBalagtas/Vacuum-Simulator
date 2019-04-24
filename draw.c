@@ -25,6 +25,21 @@ static int corner = '+';
 
 #define STUD_NUM "n9998250"
 
+// Simulation over message.
+static char * message_box =
+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+"!!                                    !!"
+"!!          SIMULATION OVER!          !!"
+"!!                                    !!"
+"!!       Press 'r' to restart...      !!"
+"!!                 or                 !!"
+"!!        Press 'q' to quit...        !!"
+"!!                                    !!"
+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+;
+
+#define MESSAGE_WIDTH 40
+#define MESSAGE_HEIGHT 9
 
 // Draw the status display area table as per specification.
 void draw_status_table() {
@@ -69,6 +84,21 @@ void draw_status_display() {
 void draw_room() {
     get_screen_size( &width, &height );
     draw_assignment_rect(0, 4, (width - 1), (height - 3), vertical, horizontal, corner);
+}
+
+// Draw the battery depleted message (simulation over message) in the middle of the room.
+void draw_simulation_over() {
+    get_screen_size( &width, &height );
+    int x = (width - 1)/ 2;
+    int y = ((height - 7)/ 2) + 4; // This accounts for the non-room area.
+    int left = round(x) - MESSAGE_WIDTH/ 2;
+    int top = round(y) - MESSAGE_HEIGHT/ 2;
+
+    // Draw the simulation over message in the middle of the room.
+    // Use draw_pixels with space_is_transparent mode off so we can't see rubbish or vaccum under
+    // the message.
+    draw_pixels(left, top, MESSAGE_WIDTH, MESSAGE_HEIGHT, message_box, false);
+    show_screen();
 }
 
 // Draw all objects in the simulation.

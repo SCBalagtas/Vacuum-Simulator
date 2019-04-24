@@ -22,11 +22,11 @@
 #include <cab202_graphics.h>
 
 void draw_rect( int left, int top, int right, int bottom, int ch );
-void draw_assignment_rect( int left, int top, int right, int bottom, int vert, int hori, int corner);
+void draw_assignment_rect( int left, int top, int right, int bottom, int vert, int hori, int corner );
 void draw_formatted_lines( int x0, int y0, const char * format, ... );
 void erase_row( int y );
 int get_chars( char * prompt, char * buffer, const int max_len );
 int get_int( char * prompt );
-void draw_pixels(int left, int top, int width, int height, char * bitmap, bool space_is_transparent);
-double deg_to_rad(int degrees);
-int rad_to_deg(double radians);
+void draw_pixels( int left, int top, int width, int height, char * bitmap, bool space_is_transparent );
+double deg_to_rad( int degrees );
+int rad_to_deg( double radians );

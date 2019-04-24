@@ -18,3 +18,4 @@ This file contains the function declarations for drawing all objects in the simu
 #include "timer.h"
 
 void draw_all();
+void draw_simulation_over();

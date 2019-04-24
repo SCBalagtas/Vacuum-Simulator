@@ -68,6 +68,23 @@ void do_operation( int ch ) {
     }
 }
 
+// A loop function which is called when vacuum battery is completely depleted. Give user option
+// to quit or reset the simulation.
+void battery_depleted() {
+    bool reset_sim = false;
+
+    while (!simulation_over && !reset_sim) {
+        int ch = get_char();
+        if (ch == 'q') {
+            simulation_over = true; // End the simulation.
+        }
+        else if ( ch == 'r' ) {
+            reset();
+            reset_sim = true; // Don't end sim, just reset and go back to main loop.
+        }
+    }
+}
+
 // The main loop function, runs the simulation.
 void loop() {
     // Implement loop here...
@@ -78,6 +95,15 @@ void loop() {
     if (!paused) {
         if (is_battery()) {
             update_vacuum();
+        }
+        else {
+            // Reaches here if battery is 0.
+            // Draw one last frame of the simulation.
+            draw_all();
+            // Draw battery depleted message here.
+            draw_simulation_over();
+            // Run the battery depleted loop.
+            battery_depleted();
         }
     }
     draw_all();

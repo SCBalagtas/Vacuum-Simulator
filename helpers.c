@@ -51,7 +51,7 @@ void draw_rect( int left, int top, int right, int bottom, int ch ) {
     draw_line( right, top, right, bottom, ch );
 } // End draw_rect
 
-void draw_assignment_rect( int left, int top, int right, int bottom, int vert, int hori, int corner) {
+void draw_assignment_rect( int left, int top, int right, int bottom, int vert, int hori, int corner ) {
     draw_line( left, top, right, top, hori );
     draw_line( left, bottom, right, bottom, hori );
     draw_line( left, top, left, bottom, vert );
@@ -233,7 +233,7 @@ int get_int( char * prompt ) {
 *       space_is_transparent – a boolean value which determines if we can see through spaces. If this is true, then we should skip any pixels 
 *                              occupied by a space (' ') in the bitmap. This is also called “transparent spaces” mode. Otherwise, spaces should be opaque.
 */
-void draw_pixels(int left, int top, int width, int height, char * bitmap, bool space_is_transparent) {
+void draw_pixels( int left, int top, int width, int height, char * bitmap, bool space_is_transparent ) {
     // Go through the rows of bitmap
     for(int h = 0; h < height; h++) {
         // Go through each character of that row of bitmap 
@@ -253,17 +253,17 @@ void draw_pixels(int left, int top, int width, int height, char * bitmap, bool s
             }   
         }
     }
-} // End of draw_pixel
+} // End draw_pixel
 
 // A simple function to convert degrees to radians.
-double deg_to_rad(int degrees) {
+double deg_to_rad( int degrees ) {
     // Calculate the provided angle into radians.
     double result = (degrees % 360) * (M_PI/ 180);
     return result;
-}
+} // End deg_to_rad
 
 // A simple function to convert radians into degrees. This will be used to display the vacuums direction in the status display.
-int rad_to_deg(double radians) {
+int rad_to_deg( double radians ) {
     // Calculate the provided angle into degrees.
     int result = round(radians * (180/ M_PI));
 
@@ -273,4 +273,4 @@ int rad_to_deg(double radians) {
     }
     
     return result % 360;
-}
+} // End rad_to_deg
