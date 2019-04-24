@@ -51,7 +51,10 @@ void pause () {
  *          the do_help function.
  */
 void do_operation( int ch ) {
-    if ( ch == 'r' ) {
+    if (ch == 'q') {
+        simulation_over = true;
+    }
+    else if ( ch == 'r' ) {
         reset();
     }
     else if ( is_vacuum_ctrl( ch ) ) {
@@ -69,21 +72,14 @@ void do_operation( int ch ) {
 void loop() {
     // Implement loop here...
     int ch = get_char();
-    if (ch == 'q') {
-        simulation_over = true;
-        return;
-    }
-
     if ( ch >= ' ' ) {
         do_operation( ch );
     }
-
     if (!paused) {
         if (is_battery()) {
             update_vacuum();
         }
     }
-
     draw_all();
 }
 

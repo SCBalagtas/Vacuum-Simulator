@@ -21,6 +21,7 @@ This file contains the function definitions for everything related to the Robot 
 #define VACUUM_WIDTH 9
 #define VACUUM_HEIGHT 9
 #define VACUUM_SPEED 0.2
+#define DEFAULT_HEADING 90
 
 static double vac_x, vac_y, vac_dx, vac_dy, angle;
 
@@ -39,6 +40,7 @@ static char * vacuum =
 static char heading[20];
 
 // Battery state
+#define MAX_BATTERY 100
 static int battery;
 static int battery_timer;
 static int battery_use;
@@ -62,13 +64,13 @@ void setup_vacuum() {
 
     // Initialise vacuum direction 90 degrees (pi/ 2), vacuum heads straight down.
     // Speed is initialised to 0.2 as per specification.
-    angle = deg_to_rad(90);
+    angle = deg_to_rad(DEFAULT_HEADING);
     double vac_speed = VACUUM_SPEED;
     vac_dx = vac_speed * cos(angle);
     vac_dy = vac_speed * sin(angle);
 
     // Initialise vacuum battery as 100%.
-    battery = 100;
+    battery = MAX_BATTERY;
 }
 
 // Start battery timer function that initiates battery_timer with get_current_time().
@@ -83,25 +85,19 @@ int calc_battery_use() {
     return battery_use;
 }
 
-// Boolean to check if there is still battery.
+// Boolean to check if there is still battery. Returns true iff battery is greater than 0.
 bool is_battery() {
-    if (battery > 0) {
-        return true;
-    }
-    return false;
+    return (battery > 0);
 }
 
 // Battery hack function. Sets the battery level to whatever the input value is.
-// If input is not an int, ignore the update.
+// If input is not an int or is 0, reset battery to max.
 void battery_hack(int new_battery) {
-    if (new_battery <= 100 && new_battery > 0) {
+    if (new_battery <= MAX_BATTERY && new_battery > 0) {
         battery = new_battery;
     }
-    else if (new_battery <= 0) {
-        battery = 25;
-    }
-    else if (new_battery > 100) {
-        battery = 100;
+    else if (new_battery > MAX_BATTERY || new_battery <= 0) {
+        battery = MAX_BATTERY;
     }
 
     // Reset battery timer.
