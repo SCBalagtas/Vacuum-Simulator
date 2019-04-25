@@ -17,6 +17,8 @@ This file contains the function declarations for everything related to the Robot
 
 void draw_vacuum();
 void setup_vacuum();
+void draw_charger();
+void setup_charger();
 bool is_vacuum_ctrl( int ch );
 void manual_update_vacuum( int ch );
 void update_vacuum();

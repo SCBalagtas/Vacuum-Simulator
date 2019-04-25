@@ -27,6 +27,7 @@ const int DELAY = 10; // in milliseconds
 void setup( void ) {
     paused = true;
     start_timer();
+    setup_charger();
     setup_vacuum();
     draw_all();
 }

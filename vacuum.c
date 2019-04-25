@@ -17,7 +17,7 @@ This file contains the function definitions for everything related to the Robot 
 #include "helpers.h"
 
 // Global variables.
-// Vacuum state
+// Vacuum variables.
 #define VACUUM_WIDTH 9
 #define VACUUM_HEIGHT 9
 #define VACUUM_SPEED 0.2
@@ -39,7 +39,7 @@ static char * vacuum =
 
 static char heading[20];
 
-// Battery state
+// Battery variables.
 #define MAX_BATTERY 100
 static int battery;
 static int battery_timer;
@@ -47,7 +47,19 @@ static int battery_use;
 static int battery_temp_time;
 static char battery_status[15];
 
-// Draw the vacuum at the center of (vac_x, vac_y).
+// Charging station variables.
+#define CHARGER_WIDTH 9
+#define CHARGER_HEIGHT 3
+
+static double charger_x, charger_y;
+
+static char * charger =
+"#########"
+"#########"
+"#########"
+;
+
+// Draw the vacuum with the center being (vac_x, vac_y).
 void draw_vacuum() {
     int left = round(vac_x) - VACUUM_WIDTH/ 2;
     int top = round(vac_y) - VACUUM_HEIGHT/ 2;
@@ -71,6 +83,36 @@ void setup_vacuum() {
 
     // Initialise vacuum battery as 100%.
     battery = MAX_BATTERY;
+}
+
+// Draw the charger with the center being (charger_x, charger_y).
+void draw_charger() {
+    int left = round(charger_x) - CHARGER_WIDTH/ 2;
+    int top = round(charger_y) - CHARGER_HEIGHT/ 2;
+
+    draw_pixels(left, top, CHARGER_WIDTH, CHARGER_HEIGHT, charger, true);
+}
+
+// Setup charger at the center of the north wall of the room.
+void setup_charger() {
+    int width = screen_width()/ 2;
+
+    charger_x = width;
+    charger_y = 6;
+}
+
+// Returns true iff the vaccum is going to collide with the charger at pixel level.
+bool vacuum_hit_charger(int new_x, int new_y) {
+    // Calculate the coordinates of the top left corner of the vacuum in it's next position.
+    int vac_left = round(new_x) - VACUUM_WIDTH/ 2;
+    int vac_top = round(new_y) - VACUUM_HEIGHT/ 2;
+
+    // Calculate the coordinates of the top left corner of the charging station.
+    int charger_left = round(charger_x) - CHARGER_WIDTH/ 2;
+    int charger_top = round(charger_y) - CHARGER_HEIGHT/ 2;
+
+    // Return the result of pixel_collision between the vacuum and the charging station.
+    return pixel_collision(charger_left, charger_top, CHARGER_WIDTH, CHARGER_HEIGHT, charger, vac_left, vac_top, VACUUM_WIDTH, VACUUM_HEIGHT, vacuum);
 }
 
 // Start battery timer function that initiates battery_timer with get_current_time().
@@ -121,20 +163,40 @@ bool is_vacuum_ctrl( int ch ) {
  *
  *  Notes:
  *      If the designated move would cause the bounding box of the vacuum
- *  icon to overlap the border then the move is ignored.
+ *      icon to overlap the border then the move is ignored. Also checks if move
+ *      would cause the bounding box of the vacuum to overlap the charging station.
  */
 void manual_update_vacuum( int ch ) {
     if ( ch == 'j' && round(vac_x - VACUUM_WIDTH / 2) > 1 ) {
-        vac_x--;
+        // Check if move will cause the vacuum to overlap the charging station.
+        if (vacuum_hit_charger(vac_x - 1, vac_y)) {
+            return;
+        }
+        else {
+            vac_x--;
+        }
     }
     else if ( ch == 'l' && round(vac_x + VACUUM_WIDTH / 2) < screen_width() - 2 ) {
-        vac_x++;
+        // Check if move will cause the vacuum to overlap the charging station.
+        if (vacuum_hit_charger(vac_x + 1, vac_y)) {
+            return;
+        }
+        else {
+            vac_x++;
+        }
     }
     else if ( ch == 'k' && round(vac_y + VACUUM_HEIGHT / 2) < screen_height() - 4 ) {
+        // This move can't result in vacuum overlapping charging station, no need to check here.
         vac_y++;
     }
     else if ( ch == 'i' && round(vac_y - VACUUM_HEIGHT / 2) > 5 ) {
-        vac_y--;
+        // Check if move will cause the vacuum to overlap the charging station.
+        if (vacuum_hit_charger(vac_x, vac_y - 1)) {
+            return;
+        }
+        else {
+            vac_y--;
+        }
     }
 }
 
@@ -179,18 +241,19 @@ void update_vacuum() {
 
     // Check if vacuum overlaps vertical walls.
     if (new_x - VACUUM_WIDTH/ 2 < 1 || new_x + VACUUM_WIDTH/ 2 > screen_width() - 2) {
-        // Insert change direction function here...
         change_direction();
         bounced = true;
     }
     // Check if vacuum overplaps horizontal walls.
     if (new_y - VACUUM_HEIGHT/ 2 < 5 || new_y + VACUUM_HEIGHT/ 2 > screen_height() - 4) {
-        // Insert change direction function here...
         change_direction();
         bounced = true;
     }
-    // Check if vacuum overlaps the charging station...
-    // Implement here...
+    // Check if vacuum overlaps the charging station.
+    if (vacuum_hit_charger(new_x, new_y)) {
+        change_direction();
+        bounced = true;
+    }
 
     // If not overlapping anything just keep moving in the same direction.
     if (!bounced) {

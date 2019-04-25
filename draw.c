@@ -106,6 +106,7 @@ void draw_all() {
     clear_screen();
     draw_room();
     draw_status_display();
+    draw_charger();
     draw_vacuum();
     show_screen();
 }

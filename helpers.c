@@ -222,7 +222,7 @@ int get_int( char * prompt ) {
     return z;
 } // End get_int
 
-// Add an implementation of the week 3 AMS exercise draw_pixels()
+// Add an implementation of the week 3 AMS exercise draw_pixels().
 /*
 *   Parameters:
 *       left – an integer which specifies the horizontal offset of the top-left corner of the image, if it were to be rendered.
@@ -274,3 +274,87 @@ int rad_to_deg( double radians ) {
     
     return result % 360;
 } // End rad_to_deg
+
+// Add an implementation of the week 4 AMS exercise get_opaque_coords().
+/*
+*   Parameters:
+*       left – an integer which specifies the horizontal offset of the top-left corner of the image, if it were to be rendered.
+*       top – an integer which specifies the vertical offset of the top-left corner of the image, if it were to be rendered.
+*       width – an integer which specifies the width of the image that would be rendered.
+*       height – an integer which specifies the height of the image that would be rendered.
+*       bitmap – a char array which contains the pixel data of the bitmap. This array is guaranteed to have at least width×height elements.
+*       x – an integer array which you will populate with the horizontal offsets of each opaque pixel in the image, if it were to be rendered. 
+*           This array is guaranteed to have capacity to hold width×height elements safely.
+*       y – an integer array which you will populate with the vertical offsets of each opaque pixel in the image, if it were to be rendered. 
+*           This array is guaranteed to have capacity to hold width×height elements safely.
+*
+*   Returns an int of how many opaque characters there are 
+*/
+int get_opaque_coords(int left, int top, int width, int height, char * bitmap, int x[], int y[]) {
+    // define a counter variable for counting the number of opaque characters in bitmap.
+    int num = 0;
+
+    // Go through bitmap and store the coordinates of opaque characters in x[] and y[].
+    for(int h = 0; h < height; h++) {
+        for(int w = 0; w < width; w++) {
+            if (bitmap[w + h * width] != ' ') {
+                x[num] = left + w;
+                y[num] = top + h;
+                num++;
+            }
+            else {
+                continue;
+            }
+        }
+    }
+
+    // Return the number of opaque characters in bitmap.
+    return num;
+
+} // End get_opaque_coords
+
+// Add an implementaion of the week 4 AMS exercise pixel_collision().
+/*
+*   Parameters:
+*       x0 – an integer which specifies the horizontal offset of the left edge of the first image.
+*       y0 – an integer which specifies the vertical offset of the top edge of the first image.
+*       w0 – an integer which specifies the width of the first image.
+*       h0 – an integer which specifies the height of the first image.
+*       pixels0 – an array of char which defines the image data. 
+*                 This array is guaranteed to refer to at least w0×h0 valid elements.
+*       x1 – an integer which specifies the horizontal offset of the left edge of the second image.
+*       y1 – an integer which specifies the vertical offset of the top edge of the second image.
+*       w1 – an integer which specifies the width of the second image.
+*       h1 – an integer which specifies the height of the second image.
+*       pixels1 – an array of char which defines the image data. 
+*                 This array is guaranteed to refer to at least w1×h1 valid elements.
+*
+*   Returns true iff at least one screen location would be covered by an opaque element of both images. 
+*   An element is opaque iff it is not the space character, ' '.
+*/
+bool pixel_collision(int x0, int y0, int w0, int h0, char * pixels0, int x1, int y1, int w1, int h1, char * pixels1) {
+    // Initialise int arrays and counter variables to store the coordinates of the bitmaps.
+    int x0_coord[100];
+    int y0_coord[100];
+    int x1_coord[100];
+    int y1_coord[100];
+    int num0 = get_opaque_coords(x0, y0, w0, h0, pixels0, x0_coord, y0_coord);
+    int num1 = get_opaque_coords(x1, y1, w1, h1, pixels1, x1_coord, y1_coord);
+
+    // Go through the coordinate arrays and check for overlaps.
+    // Return true if there is at least one overlap.
+    for(int i = 0; i < num0; i++) {
+        for(int j = 0; j < num1; j++) {
+            if (x0_coord[i] == x1_coord[j] && y0_coord[i] == y1_coord[j]) {
+                return true;
+            }
+            else {
+                continue;
+            }
+        }
+    }
+    
+    // If we reach this point, no collision occurs, return false.
+    return false;
+    
+} // End pixel_collision

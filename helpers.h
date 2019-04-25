@@ -30,3 +30,4 @@ int get_int( char * prompt );
 void draw_pixels( int left, int top, int width, int height, char * bitmap, bool space_is_transparent );
 double deg_to_rad( int degrees );
 int rad_to_deg( double radians );
+bool pixel_collision(int x0, int y0, int w0, int h0, char * pixels0, int x1, int y1, int w1, int h1, char * pixels1);
