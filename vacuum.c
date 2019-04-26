@@ -95,7 +95,7 @@ void draw_charger() {
 
 // Setup charger at the center of the north wall of the room.
 void setup_charger() {
-    int width = screen_width()/ 2;
+    int width = (screen_width() - 1)/ 2;
 
     charger_x = width;
     charger_y = 6;
