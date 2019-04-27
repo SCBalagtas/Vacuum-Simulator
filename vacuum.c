@@ -23,6 +23,8 @@ This file contains the function definitions for everything related to the Robot 
 #define VACUUM_SPEED 0.2
 #define DEFAULT_HEADING 90
 #define DEFAULT_LOAD 0
+#define MAX_LOAD 65 // in grams.
+#define RTB_TRIGGER 45 // Return to base trigger in grams.
 
 static double vac_x, vac_y, vac_dx, vac_dy, angle;
 
@@ -291,10 +293,20 @@ char * get_battery_status() {
     return battery_status;
 }
 
-// Retrun the vacuum's current load(g) in a format suitable for the status display.
+// Return the vacuum's current load(g) in a format suitable for the status display.
 char * get_load_status() {
     sprintf(load_status, "Load weight (g): %2d", load);
     return load_status;
+}
+
+// Return the vacuum's current load(g).
+int get_current_load() {
+    return load;
+}
+
+// Return the return to base trigger.
+int get_rtb_trigger() {
+    return RTB_TRIGGER;
 }
 
 // Return the vacuum's current x-coord.

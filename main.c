@@ -100,7 +100,9 @@ void loop() {
     if (!paused) {
         if (is_battery()) {
             update_vacuum();
-            collect_rubbish();
+            if (get_current_load() <= get_rtb_trigger()) {
+                collect_rubbish();
+            }
         }
         else {
             // Reaches here if battery is 0.

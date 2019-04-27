@@ -24,6 +24,8 @@ void manual_update_vacuum( int ch );
 void update_vacuum();
 void add_load(int rubbish_weight);
 char * get_load_status();
+int get_current_load();
+int get_rtb_trigger();
 char * get_heading();
 void start_battery_timer();
 bool is_battery();
