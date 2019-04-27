@@ -70,7 +70,7 @@ void draw_status_information() {
     // Draw elapsed time in the bottom left cell.
     draw_string(((width - 1)/ 6) - (strlen(get_elapsed_time())/ 2), 3, get_elapsed_time()); 
     // Draw current load of device (in g) in the bottom middle cell.
-    draw_string(((width - 1)/ 2) - (strlen(STUD_NUM)/ 2), 3, STUD_NUM); // REPLACE STUD_NUM WITH CURRENT LOAD
+    draw_string(((width - 1)/ 2) - (strlen(get_load_status())/ 2), 3, get_load_status());
     // Draw rubbish available in the bottom right cell.
     draw_string((((width - 1)/ 6) * 5) - (strlen(get_rubbish_status())/ 2), 3, get_rubbish_status());
 }

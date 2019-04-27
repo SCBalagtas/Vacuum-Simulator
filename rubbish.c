@@ -26,8 +26,9 @@ static char rubbish_status[40];
 #define DUST_WIDTH 1
 #define DUST_HEIGHT 1
 
-static int num_dust;
+static int num_dust, dust_status;
 static double dust_x[MAX_DUST], dust_y[MAX_DUST];
+static bool dust_collected[MAX_DUST];
 
 static char * dust =
 "."
@@ -39,8 +40,9 @@ static char * dust =
 #define SLIME_WIDTH 5
 #define SLIME_HEIGHT 5
 
-static int num_slime;
+static int num_slime, slime_status;
 static double slime_x[MAX_SLIME], slime_y[MAX_SLIME];
+static bool slime_collected[MAX_SLIME];
 
 static char * slime = 
 " ~~~ "
@@ -56,8 +58,9 @@ static char * slime =
 #define TRASH_WIDTH 11
 #define TRASH_HEIGHT 6
 
-static int num_trash;
+static int num_trash, trash_status;
 static double trash_x[MAX_TRASH], trash_y[MAX_TRASH];
+static bool trash_collected[MAX_SLIME];
 
 static char * trash =
 "     &     "
@@ -205,7 +208,12 @@ void draw_dust(int dust_ID) {
 // Draw all dust.
 void draw_all_dust() {
     for (int id = 0; id < num_dust; id++) {
-        draw_dust(id);
+        // Check if dust has been collected by the vacuum.
+        if (dust_collected[id] == false) {
+            draw_dust(id);
+        } 
+        // Else don't draw the dust.
+        continue;
     }
 }
 
@@ -217,7 +225,12 @@ void draw_slime(int slime_ID) {
 // Draw all slime.
 void draw_all_slime() {
     for (int id = 0; id < num_slime; id++) {
-        draw_slime(id);
+        // Check if slime has been collected by the vacuum.
+        if (slime_collected[id] == false) {
+            draw_slime(id);
+        } 
+        // Else don't draw the slime.
+        continue;
     }
 }
 
@@ -229,7 +242,12 @@ void draw_trash(int trash_ID) {
 // Draw all trash.
 void draw_all_trash() {
     for (int id = 0; id < num_trash; id++) {
-        draw_trash(id);
+        // Check if trash has been collected by the vacuum.
+        if (trash_collected[id] == false) {
+            draw_trash(id);
+        } 
+        // Else don't draw the trash.
+        continue;
     }
 }
 
@@ -238,10 +256,11 @@ void setup_dust(int dust_ID) {
     int width, height;
     get_screen_size( &width, &height );
 
-    // Assign dust with ID 'dust_ID' a random (x, y) coordinate.
+    // Assign dust with ID 'dust_ID' a random (x, y) coordinate and assign collected attribute to false.
     // Dust is only 1 x 1 so no need to add an offset to the coordinate.
     dust_x[dust_ID] = 1 + (rand() % (width - 2));
     dust_y[dust_ID] = 5 + (rand() % (height - 8));
+    dust_collected[dust_ID] = false;
 }
 
 // Setup dust based of the user's input.
@@ -255,6 +274,9 @@ void setup_all_dust() {
     else if (num_dust > MAX_DUST) {
         num_dust = MAX_DUST;
     }
+
+    // Set the dust status display value.
+    dust_status = num_dust;
 
     // Setup num_dust amount of dust.
     for (int id = 0; id < num_dust; id++) {
@@ -271,9 +293,10 @@ void setup_slime(int slime_ID) {
     int width, height;
     get_screen_size( &width, &height );
 
-    // Assign slime with ID 'slime_ID' a random (x, y) coordinate.
+    // Assign slime with ID 'slime_ID' a random (x, y) coordinate and assign collected attribute to false.
     slime_x[slime_ID] = 1 + SLIME_WIDTH/ 2 + (rand() % ((width - 2) - SLIME_WIDTH));
     slime_y[slime_ID] = 5 + SLIME_HEIGHT/ 2 + (rand() % ((height - 8) - SLIME_HEIGHT));
+    slime_collected[slime_ID] = false;
 }
 
 // Setup slime based of the user's input.
@@ -287,6 +310,9 @@ void setup_all_slime() {
     else if (num_slime > MAX_SLIME) {
         num_slime = MAX_SLIME;
     }
+    
+    // Set the slime status display value.
+    slime_status = num_slime;
 
     // Setup num_slime amount of slime.
     for (int id = 0; id < num_slime; id++) {
@@ -303,9 +329,10 @@ void setup_trash(int trash_ID) {
     int width, height;
     get_screen_size( &width, &height );
 
-    // Assign trash with ID 'trash_ID' a random (x, y) coordinate.
+    // Assign trash with ID 'trash_ID' a random (x, y) coordinate and assign collected attribute to false.
     trash_x[trash_ID] = 1 + TRASH_WIDTH/ 2 + (rand() % ((width - 2) - TRASH_WIDTH));
     trash_y[trash_ID] = 5 + TRASH_HEIGHT/ 2 + (rand() % ((height - 8) - TRASH_HEIGHT));
+    trash_collected[trash_ID] = false;
 }
 
 // Setup trash based of the user's input.
@@ -319,6 +346,9 @@ void setup_all_trash() {
     else if (num_trash > MAX_TRASH) {
         num_trash = MAX_TRASH;
     }
+
+    // Set the trash status display value.
+    trash_status = num_trash;
 
     // Setup num_slime amount of slime.
     for (int id = 0; id < num_trash; id++) {
@@ -346,7 +376,56 @@ void setup_rubbish() {
     setup_all_trash();
 }
 
+// Return the current status for rubbish in a format suitable for the status display.
 char * get_rubbish_status() {
-    sprintf(rubbish_status, "Rubbish (d, s, t): %4d, %2d, %d", num_dust, num_slime, num_trash);
+    sprintf(rubbish_status, "Rubbish (d, s, t): %4d, %2d, %d", dust_status, slime_status, trash_status);
     return rubbish_status;
+}
+
+// Function that lets the vacuum collect rubbish when not in return to base mode.
+void collect_rubbish() {
+    // Check if vacuum overlaps any dust.
+    for (int d = 0; d < num_dust; d++) {
+        // If dust with ID 'd' overlaps with the vacuum, set its collected attribute to true.
+        // This dust should no longer be drawn in the next frame.
+        if (dust_hit_vacuum(d)) {
+            // Add dust weight to the vacuum's load and update the rubbish status display, 
+            // iff this is the first time this dust collides with the vacuum.
+            if (dust_collected[d] == false) {
+                add_load(DUST_WEIGHT);
+                dust_status -= 1;
+            }
+            dust_collected[d] = true;
+        }
+    }
+
+    // Check if vacuum overlaps any slime.
+    for (int s = 0; s < num_slime; s++) {
+        // If slime with ID 's' overlaps with the vacuum, set its collected attribute to true.
+        // This slime should no longer be drawn in the next frame.
+        if (slime_hit_vacuum(s)) {
+            // Add slime weight to the vacuum's load and update the rubbish status display, 
+            // iff this is the first time this slime collides with the vacuum.
+            if (slime_collected[s] == false) {
+                add_load(SLIME_WEIGHT);
+                slime_status -= 1;
+            }
+            slime_collected[s] = true;
+        }
+    }
+
+    // Check if vacuum overlaps any trash.
+    for (int t = 0; t < num_trash; t++) {
+        // If trash with ID 't' overlaps with the vacuum, set its collected attribute to true.
+        // This trash should no longer be drawn in the next frame.
+        if (trash_hit_vacuum(t)) {
+            // Add trash weight to the vacuum's load and update the rubbish status display, 
+            // iff this is the first time this trash collides with the vacuum.
+            if (trash_collected[t] == false) {
+                add_load(TRASH_WEIGHT);
+                trash_status -= 1;
+            }
+            trash_collected[t] = true;
+        }
+    }
 }

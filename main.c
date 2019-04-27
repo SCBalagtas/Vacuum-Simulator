@@ -100,6 +100,7 @@ void loop() {
     if (!paused) {
         if (is_battery()) {
             update_vacuum();
+            collect_rubbish();
         }
         else {
             // Reaches here if battery is 0.

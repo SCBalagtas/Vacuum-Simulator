@@ -22,6 +22,7 @@ This file contains the function definitions for everything related to the Robot 
 #define VACUUM_HEIGHT 9
 #define VACUUM_SPEED 0.2
 #define DEFAULT_HEADING 90
+#define DEFAULT_LOAD 0
 
 static double vac_x, vac_y, vac_dx, vac_dy, angle;
 
@@ -38,6 +39,8 @@ static char * vacuum =
 ;
 
 static char heading[20];
+static int load;
+static char load_status[30];
 
 // Battery variables.
 #define MAX_BATTERY 100
@@ -83,6 +86,9 @@ void setup_vacuum() {
 
     // Initialise vacuum battery as 100%.
     battery = MAX_BATTERY;
+
+    // Initialise vacuum load to 0g.
+    load = DEFAULT_LOAD;
 }
 
 // Draw the charger with the center being (charger_x, charger_y).
@@ -268,16 +274,27 @@ void update_vacuum() {
     }
 }
 
-// Return the vacuums heading direction in a format suitable for the display status.
+// Function that adds to the load of the vacuum.
+void add_load(int rubbish_weight) {
+    load += rubbish_weight;
+}
+
+// Return the vacuums heading direction in a format suitable for the status display.
 char * get_heading() {
     sprintf(heading, "Heading: %3d", rad_to_deg(angle));
     return heading;
 }
 
-// Return the vacuums current battery % in a format suitable for the display status.
+// Return the vacuums current battery % in a format suitable for the status display.
 char * get_battery_status() {
     sprintf(battery_status, "Battery: %3d%%", battery);
     return battery_status;
+}
+
+// Retrun the vacuum's current load(g) in a format suitable for the status display.
+char * get_load_status() {
+    sprintf(load_status, "Load weight (g): %2d", load);
+    return load_status;
 }
 
 // Return the vacuum's current x-coord.

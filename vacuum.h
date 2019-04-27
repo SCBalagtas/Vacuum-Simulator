@@ -22,6 +22,8 @@ void setup_charger();
 bool is_vacuum_ctrl( int ch );
 void manual_update_vacuum( int ch );
 void update_vacuum();
+void add_load(int rubbish_weight);
+char * get_load_status();
 char * get_heading();
 void start_battery_timer();
 bool is_battery();
