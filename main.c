@@ -17,19 +17,23 @@ This file contains the main function for the Robot Vacuum simulator.
 #include "draw.h"
 #include "vacuum.h"
 #include "timer.h"
+#include "rubbish.h"
 
 // Global variables.
 bool simulation_over = false;
 bool paused = true;
-const int DELAY = 10; // in milliseconds
+const int DELAY = 10; // in milliseconds.
 
 // Setup all objects in the simulation.
+// Setup vacuum and charger first, so that rubbish can check whether they will overlap either
+// the vacucum or the charger. 
 void setup( void ) {
     paused = true;
-    start_timer();
     setup_charger();
     setup_vacuum();
+    setup_rubbish();
     draw_all();
+    start_timer();
 }
 
 // A reset function to reset the simulation.

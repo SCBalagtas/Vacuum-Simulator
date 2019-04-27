@@ -235,9 +235,9 @@ int get_int( char * prompt ) {
 */
 void draw_pixels( int left, int top, int width, int height, char * bitmap, bool space_is_transparent ) {
     // Go through the rows of bitmap
-    for(int h = 0; h < height; h++) {
+    for (int h = 0; h < height; h++) {
         // Go through each character of that row of bitmap 
-        for(int w = 0; w < width; w++) {
+        for (int w = 0; w < width; w++) {
             // Draw space characters
             if (!space_is_transparent) {
                 draw_char(left + w, top + h, bitmap[w + h * width]);
@@ -295,8 +295,8 @@ int get_opaque_coords(int left, int top, int width, int height, char * bitmap, i
     int num = 0;
 
     // Go through bitmap and store the coordinates of opaque characters in x[] and y[].
-    for(int h = 0; h < height; h++) {
-        for(int w = 0; w < width; w++) {
+    for (int h = 0; h < height; h++) {
+        for (int w = 0; w < width; w++) {
             if (bitmap[w + h * width] != ' ') {
                 x[num] = left + w;
                 y[num] = top + h;
@@ -343,8 +343,8 @@ bool pixel_collision(int x0, int y0, int w0, int h0, char * pixels0, int x1, int
 
     // Go through the coordinate arrays and check for overlaps.
     // Return true if there is at least one overlap.
-    for(int i = 0; i < num0; i++) {
-        for(int j = 0; j < num1; j++) {
+    for (int i = 0; i < num0; i++) {
+        for (int j = 0; j < num1; j++) {
             if (x0_coord[i] == x1_coord[j] && y0_coord[i] == y1_coord[j]) {
                 return true;
             }

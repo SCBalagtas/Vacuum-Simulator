@@ -16,6 +16,7 @@ This file contains the function definitions for drawing all objects in the simul
 #include "helpers.h"
 #include "vacuum.h"
 #include "timer.h"
+#include "rubbish.h"
 
 // Global variables.
 static int width, height;
@@ -71,7 +72,7 @@ void draw_status_information() {
     // Draw current load of device (in g) in the bottom middle cell.
     draw_string(((width - 1)/ 2) - (strlen(STUD_NUM)/ 2), 3, STUD_NUM); // REPLACE STUD_NUM WITH CURRENT LOAD
     // Draw rubbish available in the bottom right cell.
-    draw_string((((width - 1)/ 6) * 5) - (strlen(STUD_NUM)/ 2), 3, STUD_NUM); // REPLACE STUD_NUM WITH AVAILABLE RUBBISH
+    draw_string((((width - 1)/ 6) * 5) - (strlen(get_rubbish_status())/ 2), 3, get_rubbish_status());
 }
 
 // Draw the status display.
@@ -106,6 +107,7 @@ void draw_all() {
     clear_screen();
     draw_room();
     draw_status_display();
+    draw_rubbish();
     draw_charger();
     draw_vacuum();
     show_screen();

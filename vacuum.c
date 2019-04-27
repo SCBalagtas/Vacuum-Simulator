@@ -112,7 +112,7 @@ bool vacuum_hit_charger(int new_x, int new_y) {
     int charger_top = round(charger_y) - CHARGER_HEIGHT/ 2;
 
     // Return the result of pixel_collision between the vacuum and the charging station.
-    return pixel_collision(charger_left, charger_top, CHARGER_WIDTH, CHARGER_HEIGHT, charger, vac_left, vac_top, VACUUM_WIDTH, VACUUM_HEIGHT, vacuum);
+    return pixel_collision(vac_left, vac_top, VACUUM_WIDTH, VACUUM_HEIGHT, vacuum, charger_left, charger_top, CHARGER_WIDTH, CHARGER_HEIGHT, charger);
 }
 
 // Start battery timer function that initiates battery_timer with get_current_time().
@@ -278,4 +278,54 @@ char * get_heading() {
 char * get_battery_status() {
     sprintf(battery_status, "Battery: %3d%%", battery);
     return battery_status;
+}
+
+// Return the vacuum's current x-coord.
+double get_vac_x() {
+    return vac_x;
+}
+
+// Return the vacuum's current y-coord.
+double get_vac_y() {
+    return vac_y;
+}
+
+// Return the vacuum's width.
+int get_vac_width() {
+    return VACUUM_WIDTH;
+}
+
+// Return the vacuum's height.
+int get_vac_height() {
+    return VACUUM_HEIGHT;
+}
+
+// Return the vacuum's bitmap.
+char * get_vac_bitmap() {
+    return vacuum;
+}
+
+// Return the charger's current x-coord.
+double get_charger_x() {
+    return charger_x;
+}
+
+// Return the charger's current y-coord.
+double get_charger_y() {
+    return charger_y;
+}
+
+// Return the charger's width.
+int get_charger_width() {
+    return CHARGER_WIDTH;
+}
+
+// Return the charger's height.
+int get_charger_height() {
+    return CHARGER_HEIGHT;
+}
+
+// Return the charger's bitmap.
+char * get_charger_bitmap() {
+    return charger;
 }
