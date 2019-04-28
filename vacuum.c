@@ -24,7 +24,8 @@ This file contains the function definitions for everything related to the Robot 
 #define DEFAULT_HEADING 90
 #define DEFAULT_LOAD 0
 #define MAX_LOAD 65 // in grams.
-#define RTB_TRIGGER 45 // Return to base trigger in grams.
+#define RTB_LOAD_TRIGGER 45 // Return to base trigger in grams.
+#define RTB_BATTERY_TRIGGER 25 // Return to base trigger.
 
 static double vac_x, vac_y, vac_dx, vac_dy, angle;
 
@@ -57,6 +58,7 @@ static char battery_status[15];
 #define CHARGER_HEIGHT 3
 
 static double charger_x, charger_y;
+static bool docked;
 
 static char * charger =
 "#########"
@@ -91,6 +93,9 @@ void setup_vacuum() {
 
     // Initialise vacuum load to 0g.
     load = DEFAULT_LOAD;
+
+    // Initialise docked to false.
+    docked = false;
 }
 
 // Draw the charger with the center being (charger_x, charger_y).
@@ -276,6 +281,82 @@ void update_vacuum() {
     }
 }
 
+// A function to calculate an return the angle (in degrees) needed for the vacuum to head straight home.
+int calc_home() {
+    double adjacent, opposite;
+
+    // Check if vacuum is on the left side or right side of the charger.
+    if (vac_x < charger_x) {
+        adjacent = charger_x - vac_x;
+        opposite = vac_y - 9; // This is the heighest point the vacuum can go before hitting the north wall.
+    }
+    else if (vac_x > charger_x) {
+        adjacent = vac_x - charger_x;
+        opposite = vac_y - 9; // This is the heighest point the vacuum can go before hitting the north wall.
+    }
+     
+     // Calculate the elevation angle the vacuum needs to go home.
+     return rad_to_deg((atan(opposite/adjacent)));
+}
+
+// A function to change the vacuum's direction to head straight home.
+void go_home() {
+    // If the vacuum is on the left side subtract calc_home() from 360, else add calc_home() to 180.
+    // Check if vacuum is on the left side or right side of the charger.
+    if (vac_x < charger_x) {
+        // Vacuum is on the left of charger.
+        angle = deg_to_rad(360 - calc_home());
+    }
+    else if (vac_x > charger_x) {
+        // Vacuum is on the right of charger.
+        angle = deg_to_rad(180 + calc_home());
+    }
+    // If the vacuum is in line with the charger, head straight up.
+    else {
+        angle = deg_to_rad(270);
+    }
+
+    // Assign the new vac_dx and vac_dy values.
+    double vac_speed = VACUUM_SPEED;
+    vac_dx = vac_speed * cos(angle);
+    vac_dy = vac_speed * sin(angle);
+}
+
+// A function to make the vacuum go to the charging station and dock.
+void return_to_base() {
+    // Predict the new x and y coordinates of the vacuum and check if it will overlap the charging station.
+    int new_x = round(vac_x + vac_dx);
+    int new_y = round(vac_y + vac_dy);
+    // go_home() until vacuum is about to collide with the charging station.
+    if (!vacuum_hit_charger(new_x, new_y)) {
+        go_home();
+    }
+    else {
+        // Turn on docked mode.
+        docked = true;
+    }
+}
+
+// A function which does everything that needs to be done when vacuum is docked.
+void docked_mode() {
+    // Unload current payload.
+    if (load != DEFAULT_LOAD) {
+        load = DEFAULT_LOAD;
+    }
+    // Charge battery.
+    battery += 1;
+}
+
+// Returns true iff docked is set to true;
+bool is_docked() {
+    return docked;
+}
+
+// A function to toggle docked.
+void toggle_docked() {
+    docked = !docked;
+}
+
 // A vacuum hack function. Moves the vacuum to specified (x, y) coordinate and sets a new heading.
 void vacuum_hack() {
     int x, y, new_heading, width, height;
@@ -309,7 +390,7 @@ void load_hack() {
         new_load = 0;
     }
     else if (new_load >= MAX_LOAD) {
-        new_load = RTB_TRIGGER;
+        new_load = RTB_LOAD_TRIGGER;
     }
     load = new_load;
 }
@@ -343,8 +424,23 @@ int get_current_load() {
 }
 
 // Return the return to base trigger.
-int get_rtb_trigger() {
-    return RTB_TRIGGER;
+int get_rtb_load_trigger() {
+    return RTB_LOAD_TRIGGER;
+}
+
+// Return the vacuum's current battery.
+int get_battery() {
+    return battery;
+}
+
+// Return the return to base trigger.
+int get_rtb_battery_trigger() {
+    return RTB_BATTERY_TRIGGER;
+}
+
+// Return MAX_BATTERY.
+int get_max_battery() {
+    return MAX_BATTERY;
 }
 
 // Return the vacuum's current x-coord.

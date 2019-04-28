@@ -25,6 +25,7 @@ bool simulation_over = false;
 bool paused = true;
 int DELAY; // in milliseconds.
 int timeout = INT_MAX;
+bool rtb_mode = false;
 
 // Setup all objects in the simulation.
 // Setup vacuum and charger first, so that rubbish can check whether they will overlap either
@@ -32,6 +33,7 @@ int timeout = INT_MAX;
 void setup( void ) {
     DELAY = 10;
     paused = true;
+    rtb_mode = false;
     setup_charger();
     setup_vacuum();
     setup_rubbish();
@@ -161,6 +163,9 @@ void do_operation( int ch ) {
         // Reset battery timer.
         start_battery_timer();
     }
+    else if (ch == 'b') {
+        rtb_mode = true;
+    }
     else if ( ch == '?' ) {
         do_help_screen();
     }
@@ -191,10 +196,33 @@ void loop() {
         do_operation( ch );
     }
     if (!paused) {
-        if (is_battery()) {
+        // Vacuum mode.
+        if (is_battery() && !rtb_mode) {
             update_vacuum();
-            if (get_current_load() <= get_rtb_trigger()) {
+            if (get_current_load() <= get_rtb_load_trigger() && get_battery() > get_rtb_battery_trigger() && !rtb_mode) {
                 collect_rubbish();
+            }
+            else {
+                // Go return to base mode.
+                rtb_mode = true;
+            }
+        }
+        // Return to base mode.
+        else if (is_battery() && rtb_mode) {
+            if (!is_docked()) {
+                return_to_base();
+                update_vacuum(); 
+            }
+            // Docked mode.
+            else {
+                // Once battery charges to 100% undock and turn off return to base mode.
+                if (get_battery() != get_max_battery()) {
+                    docked_mode();
+                }
+                else {
+                    toggle_docked();
+                    rtb_mode = false;
+                }
             }
         }
         else {

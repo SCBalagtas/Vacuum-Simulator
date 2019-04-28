@@ -25,6 +25,7 @@ static int horizontal = '-';
 static int corner = '+';
 
 #define STUD_NUM "n9998250"
+#define DOCKED_MESSAGE "Docked!"
 
 // Simulation over message.
 static char * message_box =
@@ -185,7 +186,11 @@ void draw_help_screen() {
     show_screen();
 }
 
-
+// Draw "Docked" in the command input area.
+void draw_dock_status() {
+    get_screen_size( &width, &height );
+    draw_string((width/ 2) - (strlen(DOCKED_MESSAGE)/ 2), height - 2, DOCKED_MESSAGE);
+}
 
 // Draw all objects in the simulation.
 void draw_all() {
@@ -195,5 +200,8 @@ void draw_all() {
     draw_rubbish();
     draw_charger();
     draw_vacuum();
+    if (is_docked()) {
+        draw_dock_status();
+    }
     show_screen();
 }
