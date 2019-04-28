@@ -21,3 +21,6 @@ void draw_rubbish();
 void setup_rubbish();
 char * get_rubbish_status();
 void collect_rubbish();
+void add_dust();
+void add_slime();
+void add_trash();

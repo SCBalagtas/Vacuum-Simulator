@@ -19,3 +19,5 @@ This file contains the function declarations for drawing all objects in the simu
 
 void draw_all();
 void draw_simulation_over();
+void draw_farewell_message();
+void draw_help_screen();

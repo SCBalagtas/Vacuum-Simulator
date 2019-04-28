@@ -16,3 +16,4 @@ This file contains function declarations for the timer that's not dependent on t
 
 void start_timer();
 char * get_elapsed_time();
+int get_start_time();

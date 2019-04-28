@@ -12,6 +12,7 @@ This file contains the main function for the Robot Vacuum simulator.
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 #include <cab202_graphics.h>
 #include <cab202_timers.h>
 #include "draw.h"
@@ -22,12 +23,14 @@ This file contains the main function for the Robot Vacuum simulator.
 // Global variables.
 bool simulation_over = false;
 bool paused = true;
-const int DELAY = 10; // in milliseconds.
+int DELAY; // in milliseconds.
+int timeout = INT_MAX;
 
 // Setup all objects in the simulation.
 // Setup vacuum and charger first, so that rubbish can check whether they will overlap either
 // the vacucum or the charger. 
 void setup( void ) {
+    DELAY = 10;
     paused = true;
     setup_charger();
     setup_vacuum();
@@ -42,9 +45,58 @@ void reset() {
 }
 
 // A pause function which flips the paused variable.
-void pause () {
+void pause() {
     paused = !paused;
     start_battery_timer();
+}
+
+// A timeout function which will ask for how long the programs runs before exiting automatically.
+void do_timeout() {
+    timeout = get_int( "How many seconds shall the program run?" );
+}
+
+// Returns true iff the simulation has been running for longer than the current designated time-out value.
+bool timed_out() {
+    return get_current_time() - get_start_time() >= timeout;
+}
+
+// A quit function which displays a farewell message then exits gracefully after user input.
+void do_quit() {
+    // Draw farewell message here.
+    draw_farewell_message();
+    while (!simulation_over) {
+        int ch = get_char();
+        if ( ch >= ' ' ) {
+            simulation_over = true;
+        }
+    }
+}
+
+// A function to pause the simulation and bring up the help screen.
+void do_help_screen() {
+    // Bool variable to see whether simulation was moving before help screen.
+    bool was_moving;
+    // If we were not paused.
+    if (!paused) {
+        // Pause the simulation.
+        pause();
+        // Set was_moving to true.
+        was_moving = true;
+    } 
+    clear_screen();
+    draw_help_screen();
+    bool return_to_game = false;
+    while (!return_to_game) {
+        int ch = get_char();
+        if ( ch >= ' ' ) {
+            return_to_game = true;
+        }
+    }
+    // If we were moving before and then paused to display the help screen.
+    if (paused && was_moving) {
+        // Resume the simulation.
+        pause();
+    } 
 }
 
 /**
@@ -57,7 +109,7 @@ void pause () {
  */
 void do_operation( int ch ) {
     if (ch == 'q') {
-        simulation_over = true;
+        do_quit();
     }
     else if ( ch == 'r' ) {
         reset();
@@ -71,6 +123,47 @@ void do_operation( int ch ) {
     else if ( ch == 'y' ) {
         battery_hack(get_int( "New battery level (0 - 100)?" ));
     }
+    else if ( ch == 'd' ) {
+        add_dust();
+        // Reset battery timer.
+        start_battery_timer();
+    }
+    else if ( ch == 's' ) {
+        add_slime();
+        // Reset battery timer.
+        start_battery_timer();
+    }
+    else if ( ch == 't' ) {
+        add_trash();
+        // Reset battery timer.
+        start_battery_timer();
+    }
+    else if ( ch == 'm' ) {
+        DELAY = get_int( "New delay in milliseconds?" );
+        if (DELAY < 0) {
+            DELAY = 10;
+        }
+        // Reset battery timer.
+        start_battery_timer();
+    }
+    else if ( ch == 'o' ) {
+        do_timeout();
+        // Reset battery timer.
+        start_battery_timer();
+    }
+    else if ( ch == 'v' ) {
+        vacuum_hack();
+        // Reset battery timer.
+        start_battery_timer();
+    }
+    else if ( ch == 'w' ) {
+        load_hack();
+        // Reset battery timer.
+        start_battery_timer();
+    }
+    else if ( ch == '?' ) {
+        do_help_screen();
+    }
 }
 
 // A loop function which is called when vacuum battery is completely depleted. Give user option
@@ -81,7 +174,7 @@ void battery_depleted() {
     while (!simulation_over && !reset_sim) {
         int ch = get_char();
         if (ch == 'q') {
-            simulation_over = true; // End the simulation.
+            do_quit(); // End the simulation.
         }
         else if ( ch == 'r' ) {
             reset();
@@ -106,8 +199,6 @@ void loop() {
         }
         else {
             // Reaches here if battery is 0.
-            // Draw one last frame of the simulation.
-            draw_all();
             // Draw battery depleted message here.
             draw_simulation_over();
             // Run the battery depleted loop.
@@ -122,7 +213,7 @@ int main( void ) {
     setup_screen();
     setup();
 
-    while (!simulation_over) {
+    while (!simulation_over && !timed_out()) {
         loop();
         timer_pause(DELAY);
     }

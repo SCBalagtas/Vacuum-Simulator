@@ -22,6 +22,8 @@ void setup_charger();
 bool is_vacuum_ctrl( int ch );
 void manual_update_vacuum( int ch );
 void update_vacuum();
+void vacuum_hack();
+void load_hack();
 void add_load(int rubbish_weight);
 char * get_load_status();
 int get_current_load();

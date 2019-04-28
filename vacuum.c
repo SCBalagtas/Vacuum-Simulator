@@ -276,6 +276,44 @@ void update_vacuum() {
     }
 }
 
+// A vacuum hack function. Moves the vacuum to specified (x, y) coordinate and sets a new heading.
+void vacuum_hack() {
+    int x, y, new_heading, width, height;
+    x = get_int( "New x-coordinate for the vacuum?" );
+    y = get_int( "New y-coordinate for the vacuum?" );
+    new_heading = get_int( "New heading (in degrees)?" );
+    get_screen_size( &width, &height );
+
+    // Check if the given (x, y) coordinate is in the room. If it is, continue. Else just ignore moving the vacuum.
+    if (x - (VACUUM_WIDTH/ 2) < 1 || x + (VACUUM_WIDTH/ 2) > (width - 2) || y - (VACUUM_HEIGHT/ 2) < 5 || y + (VACUUM_HEIGHT/ 2) > (height - 4)) return;
+
+    // Check if the new vacuum position will overlap the charging station. If it does, ignore moving the vacuum.
+    if (!vacuum_hit_charger(x, y)) {
+        // Move the vacuum and set the new heading.
+        vac_x = x;
+        vac_y = y;
+        angle = deg_to_rad(new_heading);
+        // Assign the new vac_dx and vac_dy values.
+        double vac_speed = VACUUM_SPEED;
+        vac_dx = vac_speed * cos(angle);
+        vac_dy = vac_speed * sin(angle);
+    }
+}
+
+// A load hack function. Changes the current payload of the vacuum based of the user's input.
+void load_hack() {
+    int new_load;
+    new_load = get_int( "New load (in grams)?" );
+    // Check if input is appropriate.
+    if (new_load < 0) {
+        new_load = 0;
+    }
+    else if (new_load >= MAX_LOAD) {
+        new_load = RTB_TRIGGER;
+    }
+    load = new_load;
+}
+
 // Function that adds to the load of the vacuum.
 void add_load(int rubbish_weight) {
     load += rubbish_weight;

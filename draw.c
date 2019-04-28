@@ -42,6 +42,60 @@ static char * message_box =
 #define MESSAGE_WIDTH 40
 #define MESSAGE_HEIGHT 9
 
+// Farewell message.
+static char * farewell_message =
+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+"!!                                    !!"
+"!!       THANK YOU FOR PLAYING!       !!"
+"!!                                    !!"
+"!!                                    !!"
+"!!                                    !!"
+"!!      Press any key to quit...      !!"
+"!!                                    !!"
+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+;
+
+#define FAREWELL_WIDTH 40
+#define FAREWELL_HEIGHT 9
+
+// Help screen.
+static char * help_screen =
+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+"!!     VacuSim 1.0                                                 !!"
+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+"                                                                     "
+"                                                                     "
+"b: toggle return to base mode                                        "
+"                                                                     "
+"i, j, k, l: push device one unit North, West, South, or East         "
+"                                                                     "
+"d, s, t: rubbish cheat - drop rubbish                                "
+"                                                                     "
+"m: change the millisecond loop delay                                 "
+"                                                                     "
+"r: reset the simulation                                              "
+"                                                                     "
+"o: specify time-out (seconds) after which the program terminates     "
+"                                                                     "
+"p: pause or resume vacuum movement                                   "
+"                                                                     "
+"q: quit the simulation                                               "
+"                                                                     "
+"v: vacuum cheat 1 - override the position of the vacuum              "
+"                                                                     "
+"w: vacuum cheat 2 - override the load of the vacuum (grams)          "
+"                                                                     "
+"y: vacuum cheat 3 - override battery level of the vacuum             "
+"                                                                     "
+"?: display this help screen                                          "
+"                                                                     "
+"                                                                     "
+"                      Press any key to return...                     "
+;
+
+#define HELPSCREEN_WIDTH 69
+#define HELPSCREEN_HEIGHT 31
+
 // Draw the status display area table as per specification.
 void draw_status_table() {
     get_screen_size( &width, &height );
@@ -101,6 +155,37 @@ void draw_simulation_over() {
     draw_pixels(left, top, MESSAGE_WIDTH, MESSAGE_HEIGHT, message_box, false);
     show_screen();
 }
+
+// Draw the farewell message in the middle of the room.
+void draw_farewell_message() {
+    get_screen_size( &width, &height );
+    int x = (width - 1)/ 2;
+    int y = ((height - 7)/ 2) + 4; // This accounts for the non-room area.
+    int left = round(x) - FAREWELL_WIDTH/ 2;
+    int top = round(y) - FAREWELL_HEIGHT/ 2;
+
+    // Draw the farewell message in the middle of the room.
+    // Use draw_pixels with space_is_transparent mode off so we can't see rubbish or vaccum under
+    // the message.
+    draw_pixels(left, top, FAREWELL_WIDTH, FAREWELL_HEIGHT, farewell_message, false);
+    show_screen();
+}
+
+// Draw the help screen in the middle of the room.
+void draw_help_screen() {
+    get_screen_size( &width, &height );
+    int x = (width - 1)/ 2;
+    int y = ((height - 7)/ 2) + 4; // This accounts for the non-room area.
+    int left = round(x) - HELPSCREEN_WIDTH/ 2;
+    int top = round(y) - HELPSCREEN_HEIGHT/ 2;
+
+    // Draw the help screen in the middle of the room.
+    // Use draw_pixels with space_is_transparent mode off. (Doesn't matter gonna clear screen anyway).
+    draw_pixels(left, top, HELPSCREEN_WIDTH, HELPSCREEN_HEIGHT, help_screen, false);
+    show_screen();
+}
+
+
 
 // Draw all objects in the simulation.
 void draw_all() {

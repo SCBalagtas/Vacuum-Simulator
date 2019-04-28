@@ -98,6 +98,42 @@ bool dust_hit_dust(int dust_ID) {
     }
 }
 
+// Return true iff new dust will overlap any existing dust.
+bool new_dust_hit_dust(int x, int y) {
+    for (int d = 0; d < num_dust; d++) {
+        if (pixel_collision(x, y, DUST_WIDTH, DUST_HEIGHT, dust,
+                            dust_x[d], dust_y[d], DUST_WIDTH, DUST_HEIGHT, dust)) {
+            return true;
+        }
+    }
+    // If we reach here, new dust does not overlap any existing dust.
+    return false;
+}
+
+// Return true iff new dust will overlap any existing slime.
+bool new_dust_hit_slime(int x, int y) {
+    for (int s = 0; s < num_slime; s++) {
+        if (pixel_collision(x, y, DUST_WIDTH, DUST_HEIGHT, dust,
+                            slime_x[s] - (SLIME_WIDTH/ 2), slime_y[s] - (SLIME_HEIGHT/ 2), SLIME_WIDTH, SLIME_HEIGHT, slime)) {
+            return true;
+        }
+    }
+    // If we reach here, new dust does not overlap any existing slime.
+    return false;
+}
+
+// Return true iff new dust will overlap any existing trash.
+bool new_dust_hit_trash(int x, int y) {
+    for (int t = 0; t < num_trash; t++) {
+        if (pixel_collision(x, y, DUST_WIDTH, DUST_HEIGHT, dust,
+                            trash_x[t] - (TRASH_WIDTH/ 2), trash_y[t] - (TRASH_HEIGHT/ 2), TRASH_WIDTH, TRASH_HEIGHT, trash)) {
+            return true;
+        }
+    }
+    // If we reach here, new dust does not overlap any existing trash.
+    return false;
+}
+
 // Return true iff slime will overlap vacuum.
 bool slime_hit_vacuum(int slime_ID) {
     return pixel_collision(slime_x[slime_ID] - (SLIME_WIDTH/ 2), slime_y[slime_ID] - (SLIME_HEIGHT/ 2), SLIME_WIDTH, SLIME_HEIGHT, slime, 
@@ -137,6 +173,42 @@ bool slime_hit_slime(int slime_ID) {
         return pixel_collision(slime_x[slime_ID] - (SLIME_WIDTH/ 2), slime_y[slime_ID] - (SLIME_HEIGHT/ 2), SLIME_WIDTH, SLIME_HEIGHT, slime,
                                 slime_x[slime_ID - 1] - (SLIME_WIDTH/ 2), slime_y[slime_ID - 1] - (SLIME_HEIGHT/ 2), SLIME_WIDTH, SLIME_HEIGHT, slime);
     }
+}
+
+// Return true iff new slime will overlap any existing dust.
+bool new_slime_hit_dust(int x, int y) {
+    for (int d = 0; d < num_dust; d++) {
+        if (pixel_collision(x - (SLIME_WIDTH/ 2), y - (SLIME_HEIGHT/ 2), SLIME_WIDTH, SLIME_HEIGHT, slime,
+                            dust_x[d], dust_y[d], DUST_WIDTH, DUST_HEIGHT, dust)) {
+            return true;
+        }
+    }
+    // If we reach here, new slime does not overlap any existing dust.
+    return false;
+}
+
+// Return true iff new slime will overlap any existing slime.
+bool new_slime_hit_slime(int x, int y) {
+    for (int s = 0; s < num_slime; s++) {
+        if (pixel_collision(x - (SLIME_WIDTH/ 2), y - (SLIME_HEIGHT/ 2), SLIME_WIDTH, SLIME_HEIGHT, slime,
+                            slime_x[s] - (SLIME_WIDTH/ 2), slime_y[s] - (SLIME_HEIGHT/ 2), SLIME_WIDTH, SLIME_HEIGHT, slime)) {
+            return true;
+        }
+    }
+    // If we reach here, new slime does not overlap any existing slime.
+    return false;
+}
+
+// Return true iff new slime will overlap any existing trash.
+bool new_slime_hit_trash(int x, int y) {
+    for (int t = 0; t < num_trash; t++) {
+        if (pixel_collision(x - (SLIME_WIDTH/ 2), y - (SLIME_HEIGHT/ 2), SLIME_WIDTH, SLIME_HEIGHT, slime,
+                            trash_x[t] - (TRASH_WIDTH/ 2), trash_y[t] - (TRASH_HEIGHT/ 2), TRASH_WIDTH, TRASH_HEIGHT, trash)) {
+            return true;
+        }
+    }
+    // If we reach here, new slime does not overlap any existing trash.
+    return false;
 }
 
 // Return true iff trash will overlap vacuum.
@@ -195,6 +267,42 @@ bool trash_hit_trash(int trash_ID) {
         return pixel_collision(trash_x[trash_ID] - (TRASH_WIDTH/ 2), trash_y[trash_ID] - (TRASH_HEIGHT/ 2), TRASH_WIDTH, TRASH_HEIGHT, trash,
                                 trash_x[trash_ID - 1] - (TRASH_WIDTH/ 2), trash_y[trash_ID - 1] - (TRASH_HEIGHT/ 2), TRASH_WIDTH, TRASH_HEIGHT, trash);
     }
+}
+
+// Return true iff new trash will overlap any existing dust.
+bool new_trash_hit_dust(int x, int y) {
+    for (int d = 0; d < num_dust; d++) {
+        if (pixel_collision(x - (TRASH_WIDTH/ 2), y - (TRASH_HEIGHT/ 2), TRASH_WIDTH, TRASH_HEIGHT, trash,
+                            dust_x[d], dust_y[d], DUST_WIDTH, DUST_HEIGHT, dust)) {
+            return true;
+        }
+    }
+    // If we reach here, new trash does not overlap any existing dust.
+    return false;
+}
+
+// Return true iff new trash will overlap any existing slime.
+bool new_trash_hit_slime(int x, int y) {
+    for (int s = 0; s < num_slime; s++) {
+        if (pixel_collision(x - (TRASH_WIDTH/ 2), y - (TRASH_HEIGHT/ 2), TRASH_WIDTH, TRASH_HEIGHT, trash,
+                            slime_x[s] - (SLIME_WIDTH/ 2), slime_y[s] - (SLIME_HEIGHT/ 2), SLIME_WIDTH, SLIME_HEIGHT, slime)) {
+            return true;
+        }
+    }
+    // If we reach here, new trash does not overlap any existing slime.
+    return false;
+}
+
+// Return true iff new trash will overlap any existing trash.
+bool new_trash_hit_trash(int x, int y) {
+    for (int t = 0; t < num_trash; t++) {
+        if (pixel_collision(x - (TRASH_WIDTH/ 2), y - (TRASH_HEIGHT/ 2), TRASH_WIDTH, TRASH_HEIGHT, trash,
+                            trash_x[t] - (TRASH_WIDTH/ 2), trash_y[t] - (TRASH_HEIGHT/ 2), TRASH_WIDTH, TRASH_HEIGHT, trash)) {
+            return true;
+        }
+    }
+    // If we reach here, new trash does not overlap any existing trash.
+    return false;
 }
 
 /* The following are setup and draw functions for the rubbish objects.
@@ -288,6 +396,40 @@ void setup_all_dust() {
     }
 }
 
+// Add a new piece of dust. This function will be used in the do_operations(int ch) in main.
+void add_dust() {
+    // Check if num_dust is already at MAX_DUST. If it is, just ignore add_dust().
+    if (num_dust == MAX_DUST) return;
+
+    // Variables for the coordinates of the new dust and the the room dimensions.
+    int x, y, width, height; 
+    x = get_int( "x-coordinate of the new dust?" );
+    y = get_int( "y-coordinate of the new dust?" );
+    get_screen_size( &width, &height );
+
+    // Check if the given (x, y) coordinate is in the room. If it is, continue. Else just ignore adding this dust.
+    if (x < 1 || x > (width - 2) || y < 5 || y > (height - 4)) return;
+
+    // Check if new dust will overlap any objects in the room.
+    bool hit_vacuum = pixel_collision(x, y, DUST_WIDTH, DUST_HEIGHT, dust, 
+                        get_vac_x() - (get_vac_width()/ 2), get_vac_y() - (get_vac_height()/ 2), get_vac_width(), get_vac_height(), get_vac_bitmap());
+    bool hit_charger = pixel_collision(x, y, DUST_WIDTH, DUST_HEIGHT, dust, 
+                        get_charger_x() - (get_charger_width()/ 2), get_charger_y() - (get_charger_height()/ 2), get_charger_width(), get_charger_height(), get_charger_bitmap());
+    bool hit_dust = new_dust_hit_dust(x, y);
+    bool hit_slime = new_dust_hit_slime(x, y);
+    bool hit_trash = new_dust_hit_trash(x, y);
+
+    if (!hit_vacuum && !hit_charger && !hit_dust && !hit_slime && !hit_trash) {
+        // Add new dust to array of dusts.
+        dust_x[num_dust] = x;
+        dust_y[num_dust] = y;
+        dust_collected[num_dust] = false;
+        num_dust += 1;
+        dust_status = num_dust;
+    }
+    // Else just ignore adding this dust.
+}
+
 // Setup a single piece of slime.
 void setup_slime(int slime_ID) {
     int width, height;
@@ -324,6 +466,40 @@ void setup_all_slime() {
     }
 }
 
+// Add a new piece of slime. This function will be used in the do_operations(int ch) in main.
+void add_slime() {
+    // Check if num_slime is already at MAX_SLIME. If it is, just ignore add_slime().
+    if (num_slime == MAX_SLIME) return;
+
+    // Variables for the coordinates of the new slime and the the room dimensions.
+    int x, y, width, height; 
+    x = get_int( "x-coordinate of the new slime?" );
+    y = get_int( "y-coordinate of the new slime?" );
+    get_screen_size( &width, &height );
+
+    // Check if the given (x, y) coordinate is in the room. If it is, continue. Else just ignore adding this slime.
+    if (x - (SLIME_WIDTH/ 2) < 1 || x + (SLIME_WIDTH/ 2) > (width - 2) || y - (SLIME_HEIGHT/ 2) < 5 || y + (SLIME_HEIGHT/ 2) > (height - 4)) return;
+
+    // Check if new slime will overlap any objects in the room.
+    bool hit_vacuum = pixel_collision(x - (SLIME_WIDTH/ 2), y - (SLIME_HEIGHT/ 2), SLIME_WIDTH, SLIME_HEIGHT, slime, 
+                        get_vac_x() - (get_vac_width()/ 2), get_vac_y() - (get_vac_height()/ 2), get_vac_width(), get_vac_height(), get_vac_bitmap());
+    bool hit_charger = pixel_collision(x - (SLIME_WIDTH/ 2), y - (SLIME_HEIGHT/ 2), SLIME_WIDTH, SLIME_HEIGHT, slime, 
+                        get_charger_x() - (get_charger_width()/ 2), get_charger_y() - (get_charger_height()/ 2), get_charger_width(), get_charger_height(), get_charger_bitmap());
+    bool hit_dust = new_slime_hit_dust(x, y);
+    bool hit_slime = new_slime_hit_slime(x, y);
+    bool hit_trash = new_slime_hit_trash(x, y);
+
+    if (!hit_vacuum && !hit_charger && !hit_dust && !hit_slime && !hit_trash) { 
+        // Add new slime to array of slimes.
+        slime_x[num_slime] = x;
+        slime_y[num_slime] = y;
+        slime_collected[num_slime] = false;
+        num_slime += 1;
+        slime_status = num_slime;
+    }
+    // Else just ignore adding this slime.
+}
+
 // Setup a single piece of trash.
 void setup_trash(int trash_ID) {
     int width, height;
@@ -358,6 +534,40 @@ void setup_all_trash() {
         // Do while trash doesn't overlap the vacuum, charger, dust, slime and other trash.
         while (trash_hit_vacuum(id) || trash_hit_charger(id) || trash_hit_dust(id) || trash_hit_slime(id) || trash_hit_trash(id));
     }
+}
+
+// Add a new piece of trash. This function will be used in the do_operations(int ch) in main.
+void add_trash() {
+    // Check if num_trash is already at MAX_TRASH. If it is, just ignore add_trash().
+    if (num_trash == MAX_TRASH) return;
+
+    // Variables for the coordinates of the new trash and the the room dimensions.
+    int x, y, width, height; 
+    x = get_int( "x-coordinate of the new trash?" );
+    y = get_int( "y-coordinate of the new trash?" );
+    get_screen_size( &width, &height );
+
+    // Check if the given (x, y) coordinate is in the room. If it is, continue. Else just ignore adding this trash.
+    if (x - (TRASH_WIDTH/ 2) < 1 || x + (TRASH_WIDTH/ 2) > (width - 2) || y - (TRASH_HEIGHT/ 2) < 5 || y + (TRASH_HEIGHT/ 2) > (height - 4)) return;
+
+    // Check if new trash will overlap any objects in the room.
+    bool hit_vacuum = pixel_collision(x - (TRASH_WIDTH/ 2), y - (TRASH_HEIGHT/ 2), TRASH_WIDTH, TRASH_HEIGHT, trash, 
+                        get_vac_x() - (get_vac_width()/ 2), get_vac_y() - (get_vac_height()/ 2), get_vac_width(), get_vac_height(), get_vac_bitmap());
+    bool hit_charger = pixel_collision(x - (TRASH_WIDTH/ 2), y - (TRASH_HEIGHT/ 2), TRASH_WIDTH, TRASH_HEIGHT, trash, 
+                        get_charger_x() - (get_charger_width()/ 2), get_charger_y() - (get_charger_height()/ 2), get_charger_width(), get_charger_height(), get_charger_bitmap());
+    bool hit_dust = new_trash_hit_dust(x, y);
+    bool hit_slime = new_trash_hit_slime(x, y);
+    bool hit_trash = new_trash_hit_trash(x, y);
+
+    if (!hit_vacuum && !hit_charger && !hit_dust && !hit_slime && !hit_trash) { 
+        // Add new trash to array of trash.
+        trash_x[num_trash] = x;
+        trash_y[num_trash] = y;
+        trash_collected[num_trash] = false;
+        num_trash += 1;
+        trash_status = num_trash;
+    }
+    // Else just ignore adding this trash.
 }
 
 // Draw all rubbish.

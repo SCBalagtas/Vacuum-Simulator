@@ -46,3 +46,8 @@ char * get_elapsed_time() {
     format_time(calc_elapsed_time());
     return timer;
 }
+
+// Return start_time.
+int get_start_time() {
+    return start_time;
+}
