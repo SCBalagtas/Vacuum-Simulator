@@ -275,8 +275,9 @@ void update_vacuum() {
     }
 
     // Update the battery %.
-    if (calc_battery_use() - battery_temp_time == 1) {
-        battery -= 1;
+    // If it has been 1 second or more.
+    if (calc_battery_use() - battery_temp_time >= 1) {
+        battery -= (calc_battery_use() - battery_temp_time);
         battery_temp_time = calc_battery_use();
     }
 }
