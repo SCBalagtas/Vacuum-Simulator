@@ -216,12 +216,14 @@ void loop() {
             // Docked mode.
             else {
                 // Once battery charges to 100% undock and turn off return to base mode.
-                if (get_battery() != get_max_battery()) {
+                if (get_battery() < get_max_battery()) {
                     docked_mode();
                 }
                 else {
                     toggle_docked();
                     rtb_mode = false;
+                    // Reset battery timer.
+                    start_battery_timer();
                 }
             }
         }

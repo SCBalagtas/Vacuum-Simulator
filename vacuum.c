@@ -56,9 +56,11 @@ static char battery_status[15];
 // Charging station variables.
 #define CHARGER_WIDTH 9
 #define CHARGER_HEIGHT 3
+#define CHARGING_TIME 3 // How long it will take to charge 0 - 100 (in seconds).
 
 static double charger_x, charger_y;
 static bool docked;
+static double charge_timer, charge_temp_time, charging;
 
 static char * charger =
 "#########"
@@ -134,10 +136,22 @@ void start_battery_timer() {
     battery_temp_time = 0;
 }
 
+// Start charge timer function that initiates charge_timer with get_current_time().
+void start_charge_timer() {
+    charge_timer = get_current_time();
+    charge_temp_time = 0;
+}
+
 // Calculate the battery used since last unpause.
 int calc_battery_use() {
     battery_use = round(get_current_time()) - battery_timer;
     return battery_use;
+}
+
+// Calculate how long the vacuum has been charging since docking.
+double calc_charging() {
+    charging = get_current_time() - charge_timer;
+    return charging;
 }
 
 // Boolean to check if there is still battery. Returns true iff battery is greater than 0.
@@ -335,6 +349,8 @@ void return_to_base() {
     else {
         // Turn on docked mode.
         docked = true;
+        // Start charge timer.
+        start_charge_timer();
     }
 }
 
@@ -345,7 +361,10 @@ void docked_mode() {
         load = DEFAULT_LOAD;
     }
     // Charge battery.
-    battery += 1;
+    if ((calc_charging() - charge_temp_time >= (CHARGING_TIME/ MAX_BATTERY)) && battery < MAX_BATTERY) {
+        battery += 1;
+        charge_temp_time = calc_charging();
+    }
 }
 
 // Returns true iff docked is set to true;
